@@ -1,52 +1,54 @@
-function computerChoice(){
-    let num=Math.floor(Math.random() * 3);
-    if (num===0){
-        return "rock";
-    }else if(num===1){
-        return "paper";
-    }else if(num===2){
-        return "scissor";
-    }
-}
-function playerChoice(){
-    let player=prompt("Choose one:Rock,paper or scissor")
-    player=player.toLowerCase()
-    return player
+let playerScore=0
+let computerScore=0
+let roundResult=document.getElementById("round-result")
+let score=document.getElementById("score");
 
-}
-let playerScore=0;
-let computerScore=0;
-
-function round(computerChoice,humanchoice){
-    if(humanchoice===computerChoice){
-        return "Tie!No one one";
-    }else if(humanchoice=="rock" && computerChoice=="scissor"||
-             humanchoice=="paper" && computerChoice=="rock"||
-             humanchoice=="scissor" && computerChoice=="paper"){
-                playerScore+=1
-                return `Congratulations! ${humanchoice} beats ${computerChoice}`
-            }else{
-                computerScore+=1
-                return `Sorry! ${computerChoice} beats ${humanchoice}`
-
-            }
+function getcomputerChoice(){
+    const choices=['rock','paper','scissors']
+    const random=Math.floor(Math.random()*3)
+    return choices[random]
 }
 
-;
-function playGame(){
-    for(let i=1;i<=5;i++){
-         let human = playerChoice();
-         let computer = computerChoice()
-         console.log(`round ${i}`)
-         console.log(round(human,computer))
-         console.log(`Scores -> Player: ${playerScore}, Computer: ${computerScore}`);
-    }
+function playRound(player,computer){
+    if (player===computer) 
+        return "tie";
+    const playerwins=
+    (player==="rock" && computer==="scissors")||
+    (player==="paper" && computer==="rock")||
+    (player==="scissors" && computer==="paper");
 
-
+    return playerwins ? "player":"computer";
 }
 
-playGame()
-    
+let buttons=document.querySelectorAll('[data-choice]');
+
+for (let i=0;i<buttons.length;i++){
+    let button=buttons[i];
+    button.addEventListener('click',function(){
+        let playerChoice=button.getAttribute('data-choice');
+        let computerChoice=getcomputerChoice();
+        let result=playRound(playerChoice,computerChoice);
+
+        if (result==="player"){
+            playerScore++;
+        }else if (result==="computer"){
+            computerScore++;
+        }
+
+        roundResult.textContent="You "+ playerChoice+ ",computer "+computerChoice + ". result" + result
+        score.textContent="Player"+playerScore+" Computer"+computerScore;
+
+
+        if (playerScore === 5) {
+            roundResult.textContent = " You won the whole game!";
+        } else if (computerScore === 5) {
+            roundResult.textContent = " Computer won the whole game!";
+        }
+ 
+        
+
+    });
+}
 
 
 
